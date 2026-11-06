@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panduan Fasilitator: Latihan AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3F6F5;
+    --surface: #FFFFFF;
+    --ink: #14262E;
+    --muted: #4E6470;
+    --line: #D3DEDB;
+    --accent: #1F6F78;
+    --accent-soft: #DDEEEF;
+    --warn-bg: #FFF3D1;
+    --warn-ink: #6B4700;
+    --serif: "Literata", Georgia, "Times New Roman", serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1B20;
+      --surface: #16262D;
+      --ink: #E6EEEC;
+      --muted: #9FB3BA;
+      --line: #2B3F47;
+      --accent: #7CC7CF;
+      --accent-soft: #1D3A40;
+      --warn-bg: #3A2F12;
+      --warn-ink: #F3D98A;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 0 1.25rem 4rem;
+  }
+  header.top {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  header.top h1 {
+    font-size: 2.1rem;
+    line-height: 1.2;
+    margin: 0 0 .6rem;
+    font-weight: 700;
+  }
+  header.top p { margin: 0; color: var(--muted); }
+  nav.toc {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    z-index: 5;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  nav.toc ul {
+    list-style: none;
+    margin: 0 auto;
+    padding: .7rem 0;
+    max-width: 44rem;
+    padding-inline: 1.25rem;
+    display: flex;
+    gap: .4rem 1rem;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .9rem;
+  }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover, nav.toc a:focus-visible { text-decoration: underline; }
+  section { padding-top: 2.5rem; }
+  h2 {
+    font-size: 1.6rem;
+    margin: 0 0 .5rem;
+    line-height: 1.25;
+  }
+  h3 {
+    font-size: 1.12rem;
+    margin: 2rem 0 .5rem;
+    line-height: 1.3;
+  }
+  p { margin: .6rem 0; }
+  .lead { font-size: 1.14rem; color: var(--muted); }
+  a { color: var(--accent); }
+  .meta {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .88rem;
+    color: var(--muted);
+  }
+
+  /* Tabel ringkas, bisa digulir di layar kecil */
+  .scroll { overflow-x: auto; margin: 1rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .95rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: .6rem .75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  th { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 600; background: var(--accent-soft); }
+  tr:last-child td { border-bottom: none; }
+
+  /* Linimasa: setiap baris = satu rentang menit */
+  ol.timeline { list-style: none; padding: 0; margin: 1rem 0; border-left: 2px solid var(--accent); }
+  ol.timeline li {
+    position: relative;
+    padding: 0 0 1rem 1.2rem;
+  }
+  ol.timeline li::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: .55rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  ol.timeline .time {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: .92rem;
+  }
+  ol.timeline .what { display: block; }
+  ol.timeline .note { display: block; color: var(--muted); font-size: .97rem; }
+
+  blockquote {
+    margin: 1rem 0;
+    padding: .2rem 0 .2rem 1rem;
+    border-left: 3px solid var(--accent);
+    color: var(--ink);
+    font-style: italic;
+  }
+  ul.plain { padding-left: 1.2rem; margin: .5rem 0; }
+  ul.plain li { margin: .35rem 0; }
+
+  .warn {
+    background: var(--warn-bg);
+    color: var(--warn-ink);
+    padding: .9rem 1.1rem;
+    margin: 1.2rem 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .95rem;
+  }
+  .warn strong { display: block; margin-bottom: .2rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1rem 1.1rem;
+    margin: 1rem 0;
+  }
+
+  /* Cheatsheet */
+  .sheet {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1.2rem 1.2rem .8rem;
+    margin: 1rem 0 1.6rem;
+  }
+  .sheet h3 { margin-top: .2rem; }
+  pre.tpl {
+    background: var(--paper);
+    border: 1px dashed var(--accent);
+    padding: .9rem 1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .88rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: var(--ink);
+    margin: .6rem 0;
+  }
+  button.copy {
+    font: inherit;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .88rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: .45rem .9rem;
+    cursor: pointer;
+  }
+  button.copy:focus-visible, nav.toc a:focus-visible, label.chk input:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  label.chk {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    padding: .35rem 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .95rem;
+    cursor: pointer;
+  }
+  label.chk input { margin-top: .4rem; width: 1.05rem; height: 1.05rem; accent-color: var(--accent); flex: none; }
+  .ex { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9rem; background: var(--paper); padding: .15rem .35rem; }
+
+  dl { margin: 0; }
+  .term { background: var(--surface); border: 1px solid var(--line); padding: .8rem 1rem; margin: .6rem 0; }
+  dt { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 700; color: var(--accent); }
+  dd { margin: .25rem 0 0; }
+  dd .ex { display: block; margin-top: .35rem; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: .92rem; color: var(--muted); }
+  .rkt { display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem; margin: .8rem 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .rkt b { color: var(--accent); font-size: 1.1rem; }
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: .88rem;
+  }
+
+  @media print {
+    nav.toc, button.copy, footer .noprint { display: none !important; }
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .sheet, .card, table { break-inside: avoid; border-color: #999; }
+    section { break-before: auto; }
+    #cheatsheet { break-before: page; }
+    a { color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Panduan Fasilitator: Latihan AI</h1>
+    <p>Tiga latihan (Gemini, gambar, video), hal yang perlu diperhatikan, dan cheatsheet untuk peserta. Versi 5 November 2026.</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Navigasi halaman">
+  <ul>
+    <li><a href="#ringkasan">Ringkasan</a></li>
+    <li><a href="#gemini">Skill Gemini</a></li>
+    <li><a href="#gambar">Gambar ChatGPT</a></li>
+    <li><a href="#vids">Video Google Vids</a></li>
+    <li><a href="#perhatikan">Perhatikan</a></li>
+    <li><a href="#cheatsheet">Cheatsheet</a></li>
+    <li><a href="#glosarium">Glosarium</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+<section id="ringkasan">
+  <h2>Ringkasan</h2>
+  <p class="lead">Ketiga latihan memakai pola yang sama: fasilitator memandu, peserta mengerjakan sendiri, lalu berbagi dengan rekan sebelah. Fasilitator tidak menulis hasil untuk peserta.</p>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Latihan</th><th>Durasi</th><th>Alat</th><th>Hasil peserta</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Skill di Gemini</td><td>20 menit</td><td>Gemini, menu Customize lalu Skills</td><td>Satu skill tersimpan dan satu hasil uji</td></tr>
+        <tr><td>Gambar dengan ChatGPT</td><td>30 menit</td><td>ChatGPT (buat dan edit gambar)</td><td>Satu gambar buatan, satu hasil edit, satu gambar dilengkapi, deskripsi</td></tr>
+        <tr><td>Video dengan Google Vids</td><td>45 menit</td><td>Google Vids di komputer</td><td>Storyboard 5 adegan, draf video, catatan perbaikan</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Ketiga latihan bisa dipakai sendiri-sendiri. Gemini cocok di awal sesi, setelah peserta mengenal rumus R-K-T-F-B (Peran, Konteks, Tugas, Format, Batasan; lihat bagian Rumus di cheatsheet dan Glosarium).</p>
+</section>
+
+<section id="gemini">
+  <h2>Latihan 1: Skill di Gemini</h2>
+  <p class="meta">20 menit · Individu, lalu pair share</p>
+  <p>Skill adalah cara memberi tahu Gemini sekali saja: peran apa yang diambil, aturan apa yang diikuti, dan bentuk hasil seperti apa. Peserta mengisi tiga kolom: <strong>Name</strong>, <strong>Description</strong>, dan <strong>Instructions</strong>.</p>
+
+  <h3>Alur</h3>
+  <ol class="timeline">
+    <li><span class="time">0 sampai 5 menit</span><span class="what">Pengantar</span><span class="note">Jelaskan apa itu skill dan tunjukkan form di layar besar.</span></li>
+    <li><span class="time">5 sampai 13 menit</span><span class="what">Peserta menulis skill</span><span class="note">Langkah 1 sampai 4. Berkeliling dan bantu dengan pertanyaan, bukan jawaban.</span></li>
+    <li><span class="time">13 sampai 17 menit</span><span class="what">Uji coba</span><span class="note">Setiap peserta memberi satu tugas nyata ke skill dan mencatat hasilnya.</span></li>
+    <li><span class="time">17 sampai 20 menit</span><span class="what">Pair share dan refleksi</span><span class="note">Pasangan bertukar skill. Undang 2 sampai 3 relawan bercerita.</span></li>
+  </ol>
+
+  <h3>Skrip pengantar</h3>
+  <blockquote>"Bayangkan punya asisten yang sudah hafal cara kerjamu. Kamu tidak perlu menjelaskan ulang setiap hari."</blockquote>
+
+  <h3>Pertanyaan pemantik saat berkeliling</h3>
+  <ul class="plain">
+    <li>Pekerjaan apa yang paling sering kamu ulang?</li>
+    <li>Permintaan seperti apa yang harus mengaktifkan skill ini?</li>
+    <li>Bagaimana bentuk hasil yang kamu inginkan?</li>
+    <li>Apa yang tidak boleh dilakukan skill ini?</li>
+  </ul>
+
+  <h3>Masalah umum</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Masalah</th><th>Cara membantu</th></tr></thead>
+      <tbody>
+        <tr><td>Description terlalu umum, skill tidak aktif</td><td>Tambahkan 2 sampai 3 kalimat pemicu, misalnya "buatkan hook untuk...".</td></tr>
+        <tr><td>Instructions hanya satu kalimat</td><td>Tanyakan batasannya, bentuk hasilnya, dan contoh keluarannya.</td></tr>
+        <tr><td>Satu skill untuk banyak tugas</td><td>Sarankan satu skill untuk satu pekerjaan.</td></tr>
+        <tr><td>Nama skill berspasi atau berhuruf besar</td><td>Ikuti bentuk di form: huruf kecil dengan tanda hubung.</td></tr>
+        <tr><td>Menu Skills tidak muncul</td><td>Tulis instruksi yang sama di chat biasa dan simpan sebagai catatan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="gambar">
+  <h2>Latihan 2: Gambar dengan ChatGPT</h2>
+  <p class="meta">30 menit · Individu, lalu pair share</p>
+  <p>Peserta membuat satu gambar, mengubah satu foto, lalu melengkapi satu gambar. Prompt yang baik menyebut subjek, latar, cahaya, dan gaya.</p>
+
+  <h3>Alur</h3>
+  <ol class="timeline">
+    <li><span class="time">0 sampai 5 menit</span><span class="what">Pengantar</span><span class="note">Tunjukkan rumus prompt dan satu contoh sebelum dan sesudah. Jelaskan tiga mode: buat, ubah, lengkapi.</span></li>
+    <li><span class="time">5 sampai 15 menit</span><span class="what">Latihan 1: buat gambar</span><span class="note">Tambahkan satu elemen rumus di tiap percobaan, jangan mengubah semuanya sekaligus.</span></li>
+    <li><span class="time">15 sampai 22 menit</span><span class="what">Latihan 2: ubah gambar realis</span><span class="note">Pastikan peserta memakai foto bendanya sendiri. Pakai pola "ubah X, pertahankan Y".</span></li>
+    <li><span class="time">22 sampai 27 menit</span><span class="what">Latihan 3: lengkapi gambar</span><span class="note">Bantu memilih inpainting atau outpainting. Bila alat pilih tidak ada, jelaskan area dengan kata-kata.</span></li>
+    <li><span class="time">27 sampai 30 menit</span><span class="what">Pair share dan refleksi</span><span class="note">Rekan menebak prompt yang dipakai.</span></li>
+  </ol>
+
+  <h3>Skrip pengantar</h3>
+  <blockquote>"Menulis prompt gambar mirip memberi arahan ke fotografer. Semakin jelas subjek, latar, cahaya, dan gayanya, semakin dekat hasilnya dengan bayangan kalian."</blockquote>
+
+  <h3>Masalah umum</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Masalah</th><th>Cara membantu</th></tr></thead>
+      <tbody>
+        <tr><td>Prompt terlalu singkat</td><td>Minta peserta menambah subjek, latar, cahaya, dan gaya satu per satu.</td></tr>
+        <tr><td>Edit mengubah bagian lain</td><td>Tulis eksplisit bagian yang dipertahankan. Ubah satu hal per percobaan.</td></tr>
+        <tr><td>Tulisan di gambar kacau</td><td>Minta ruang kosong untuk teks, lalu tambahkan tulisan di aplikasi desain.</td></tr>
+        <tr><td>Bagian baru tidak menyatu</td><td>Sebut gaya dan cahaya gambar asli dalam prompt pelengkap.</td></tr>
+        <tr><td>Tangan atau wajah janggal</td><td>Ubah komposisi agar bagian itu tidak tampak, atau ulangi pembuatan.</td></tr>
+        <tr><td>Batas pemakaian akun habis</td><td>Peserta menulis prompt saja, lalu mengeksekusi bergantian di satu akun.</td></tr>
+        <tr><td>Foto memuat wajah orang lain</td><td>Ingatkan soal izin dan privasi. Arahkan ke foto benda.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Diskusi etika (3 menit bila waktu ada)</h3>
+  <ul class="plain">
+    <li>Kapan gambar buatan AI perlu diberi label?</li>
+    <li>Apa batas antara terinspirasi dan meniru karya orang lain?</li>
+    <li>Apa risikonya bila gambar produk menampilkan hasil yang tidak nyata?</li>
+  </ul>
+</section>
+
+<section id="vids">
+  <h2>Latihan 3: Video dengan Google Vids</h2>
+  <p class="meta">45 menit · Individu, lalu pair share · Hanya bisa dibuat di komputer</p>
+  <p>Peserta membuat satu video pendek, mulai dari satu pesan utama, lalu menyusun storyboard lima adegan, membuat draf, menyunting, dan membagikannya. AI membantu mempercepat, tetapi peserta yang menentukan pesan dan memeriksa isinya.</p>
+
+  <h3>Alur</h3>
+  <ol class="timeline">
+    <li><span class="time">0 sampai 5 menit</span><span class="what">Pengantar</span><span class="note">Putar dua video contoh pendek, lalu jelaskan alurnya.</span></li>
+    <li><span class="time">5 sampai 13 menit</span><span class="what">Topik dan storyboard</span><span class="note">Pilih satu pesan utama dan tulis narasi singkat.</span></li>
+    <li><span class="time">13 sampai 27 menit</span><span class="what">Draf video</span><span class="note">Tunjukkan cara memulai: template, Slides, rekaman, atau AI. Bantu peserta yang fiturnya berbeda.</span></li>
+    <li><span class="time">27 sampai 37 menit</span><span class="what">Sunting dan bagikan</span><span class="note">Ubah satu hal per percobaan. Pastikan takarir dicek dan cara berbagi dipahami.</span></li>
+    <li><span class="time">37 sampai 45 menit</span><span class="what">Pair share dan refleksi</span><span class="note">Rekan menonton video dan memberi satu saran.</span></li>
+  </ol>
+
+  <h3>Skrip pengantar</h3>
+  <blockquote>"Video yang baik dimulai dari satu pesan yang jelas, bukan dari alatnya. AI mempercepat pekerjaan, tetapi kalianlah yang memutuskan apa yang layak dibagikan."</blockquote>
+
+  <h3>Masalah umum</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Masalah</th><th>Cara membantu</th></tr></thead>
+      <tbody>
+        <tr><td>Fitur AI tidak muncul</td><td>Pakai template, teks, dan media bawaan. Jelaskan bahwa fitur bergantung akun.</td></tr>
+        <tr><td>Peserta membuka dari ponsel</td><td>Pinjamkan laptop atau pasangkan dengan rekan. Ponsel hanya untuk menonton.</td></tr>
+        <tr><td>Teks terlalu panjang</td><td>Pendekkan hingga satu ide per adegan.</td></tr>
+        <tr><td>Video terlalu panjang</td><td>Batasi 5 adegan untuk sesi ini.</td></tr>
+        <tr><td>Klip AI terlihat janggal</td><td>Sederhanakan prompt, ulangi, atau ganti dengan media bawaan.</td></tr>
+        <tr><td>Takarir tidak sesuai ucapan</td><td>Minta peserta membaca dan memperbaiki takarir sebelum berbagi.</td></tr>
+        <tr><td>Tautan terlalu terbuka</td><td>Ajarkan memeriksa izin lihat, komentar, atau sunting sebelum mengirim.</td></tr>
+        <tr><td>Memakai wajah atau suara orang nyata</td><td>Ingatkan soal izin. Arahkan ke presenter netral atau suara sendiri.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Diskusi etika (3 menit bila waktu ada)</h3>
+  <ul class="plain">
+    <li>Kapan video AI perlu diberi keterangan?</li>
+    <li>Apa batas antara memakai presenter AI dan menyamar sebagai orang nyata?</li>
+    <li>Siapa yang bertanggung jawab bila video memuat informasi yang keliru?</li>
+  </ul>
+</section>
+
+<section id="perhatikan">
+  <h2>Hal yang perlu diperhatikan</h2>
+  <p class="lead">Catatan ini berlaku untuk ketiga latihan. Bagian paling penting ada di sini.</p>
+
+  <h3>Sebelum sesi</h3>
+  <div class="card">
+    <label class="chk"><input type="checkbox"> Coba seluruh latihan sendiri di akun yang sama dengan peserta.</label>
+    <label class="chk"><input type="checkbox"> Nama menu dan tampilan form bisa berubah antarversi. Catat nama menu yang sebenarnya di akun peserta.</label>
+    <label class="chk"><input type="checkbox"> Siapkan rencana cadangan untuk setiap latihan (lihat tabel di bawah).</label>
+    <label class="chk"><input type="checkbox"> Pastikan semua peserta sudah bisa masuk ke akun sebelum sesi dimulai.</label>
+    <label class="chk"><input type="checkbox"> Siapkan timer yang terlihat semua orang dan layar besar untuk contoh.</label>
+    <label class="chk"><input type="checkbox"> Cetak Worksheet Peserta dengan huruf besar, atau kirim tautannya.</label>
+  </div>
+
+  <h3>Cadangan bila sesuatu tidak berjalan</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Bila</th><th>Lakukan</th></tr></thead>
+      <tbody>
+        <tr><td>Menu Skills di Gemini tidak ada</td><td>Tulis isi skill di chat biasa dan simpan sebagai catatan.</td></tr>
+        <tr><td>Batas gratis gambar habis</td><td>Peserta menulis prompt saja, lalu dieksekusi bergantian di satu akun.</td></tr>
+        <tr><td>Fitur AI Vids tidak muncul</td><td>Pakai template, teks, dan media bawaan.</td></tr>
+        <tr><td>Peserta hanya punya ponsel</td><td>Pinjamkan laptop atau bekerja berpasangan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Akan tetap perlu dicek</h3>
+  <ul class="plain">
+    <li><strong>Cara mengunduh video di Google Vids belum terkonfirmasi.</strong> Uji dulu sebelum sesi. Yang tertulis adalah berbagi dengan izin lihat, komentar, atau sunting, dan ekspor ke YouTube (default privat).</li>
+    <li><strong>Batas pemakaian dan fitur AI bergantung akun.</strong> Akun gratis bisa cepat habis di tengah sesi.</li>
+  </ul>
+
+  <h3>Izin, privasi, dan kejujuran konten</h3>
+  <div class="warn">
+    <strong>Wajah dan suara orang lain</strong>
+    Jangan mengunggah foto atau memakai suara orang nyata tanpa izin. Gunakan foto benda, presenter netral, atau suara sendiri.
+  </div>
+  <div class="warn">
+    <strong>Klaim produk dan label</strong>
+    Jangan membuat klaim yang tidak diberikan peserta, seperti "pasti sembuh". Tulis #ad bila konten berbayar atau afiliasi. Beri label pada gambar atau video buatan AI bila perlu.
+  </div>
+
+  <h3>Aksesibilitas</h3>
+  <ul class="plain">
+    <li>Bacakan setiap langkah dan jelaskan apa yang tampil di layar.</li>
+    <li>Peserta boleh menjawab lisan atau tertulis, dan boleh meminta waktu tambahan.</li>
+    <li>Dorong takarir dan deskripsi gambar atau video. Peserta boleh mendikte.</li>
+    <li>Hindari video dengan kedipan cepat bagi peserta yang peka cahaya.</li>
+    <li>Pair share boleh dilakukan di tempat duduk masing-masing.</li>
+  </ul>
+</section>
+
+<section id="cheatsheet">
+  <h2>Cheatsheet untuk peserta</h2>
+  <p class="lead">Halaman ini bisa dicetak atau dibagikan sebagai tautan. Tombol salin membantu peserta memindahkan template ke Gemini.</p>
+
+  <div class="sheet">
+    <h3>Rumus dasar R-K-T-F-B</h3>
+    <p>Dipakai untuk menyusun prompt teks dan instructions skill.</p>
+    <div class="rkt"><b>R</b><span>Peran: posisi yang diambil AI</span><b>K</b><span>Konteks: latar belakang dan tujuan</span><b>T</b><span>Tugas: apa yang harus dikerjakan</span><b>F</b><span>Format: bentuk hasil</span><b>B</b><span>Batasan: hal yang tidak boleh dilakukan</span></div>
+    <pre class="tpl">Kamu adalah [R]. Konteks: [K]. Tugas: [T]. Format: [F]. Batasan: [B].</pre>
+    <label class="chk"><input type="checkbox"> Prompt sudah memuat kelima bagian</label>
+  </div>
+
+  <div class="sheet">
+    <h3>A. Skill Gemini</h3>
+    <p>Isi tiga kolom di form Skills (Customize lalu Skills, lalu Create):</p>
+    <pre class="tpl" id="tpl-skill">Name:
+nama-skill-huruf-kecil
+
+Description:
+Dipakai saat saya minta [pekerjaan].
+Contoh permintaan: "buatkan [contoh 1]", "tulis [contoh 2]".
+
+Instructions:
+Peran: Kamu adalah [peran].
+Langkah: 1) Tanyakan [bahan yang dibutuhkan], maksimal 3 pertanyaan. 2) Buat [hasil].
+Format: [bentuk hasil, misalnya 3 poin pendek].
+Batasan: Jangan membuat klaim yang tidak diberikan pengguna. Tambahkan #ad bila diminta.</pre>
+    <button class="copy" type="button" data-target="tpl-skill">Salin template</button>
+    <ul class="plain">
+      <li><strong>Description</strong> menyebut kapan skill dipakai. Tanpa ini, skill tidak aktif.</li>
+      <li><strong>Instructions</strong> memuat peran, langkah, format, dan batasan.</li>
+      <li>Satu skill untuk satu pekerjaan.</li>
+    </ul>
+    <label class="chk"><input type="checkbox"> Description berisi contoh permintaan</label>
+    <label class="chk"><input type="checkbox"> Instructions memuat peran, langkah, format, dan batasan</label>
+    <label class="chk"><input type="checkbox"> Sudah diuji dengan satu tugas nyata</label>
+  </div>
+
+  <div class="sheet">
+    <h3>B. Prompt gambar</h3>
+    <p>Rumus dasar: <strong>subjek + latar + cahaya + gaya</strong>.</p>
+    <pre class="tpl" id="tpl-img">Buat gambar [subjek], di [latar], diterangi [cahaya], dengan gaya [gaya].</pre>
+    <p>Contoh: <span class="ex">Buat gambar botol kopi di meja kayu, diterangi cahaya pagi dari jendela, dengan gaya foto produk minimalis.</span></p>
+    <p>Untuk mengedit: <span class="ex">Ubah warna label menjadi hijau, pertahankan bentuk botol dan bayangannya.</span></p>
+    <label class="chk"><input type="checkbox"> Prompt punya subjek, latar, cahaya, dan gaya</label>
+    <label class="chk"><input type="checkbox"> Edit hanya mengubah satu hal per percobaan</label>
+    <label class="chk"><input type="checkbox"> Tangan, wajah, dan tulisan sudah diperiksa</label>
+    <label class="chk"><input type="checkbox"> Gambar diberi label bila perlu, dan tidak memuat wajah orang lain tanpa izin</label>
+  </div>
+
+  <div class="sheet">
+    <h3>C. Storyboard video (5 adegan)</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Adegan</th><th>Isi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Pembuka: masalah atau pertanyaan yang membuat penonton tertarik</td></tr>
+          <tr><td>2</td><td>Inti: satu pesan utama</td></tr>
+          <tr><td>3</td><td>Contoh: bukti atau cerita singkat</td></tr>
+          <tr><td>4</td><td>Inti lanjutan atau langkah yang bisa dilakukan</td></tr>
+          <tr><td>5</td><td>Penutup: satu hal yang ingin diingat penonton</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Satu ide per adegan. Tulis teks singkat di tiap adegan.</p>
+    <label class="chk"><input type="checkbox"> Setiap adegan punya teks atau narasi</label>
+    <label class="chk"><input type="checkbox"> Teks terbaca di layar kecil</label>
+  </div>
+
+  <div class="sheet">
+    <h3>D. Sebelum berbagi</h3>
+    <label class="chk"><input type="checkbox"> Takarir atau transkrip sudah dibaca dan diperbaiki</label>
+    <label class="chk"><input type="checkbox"> Izin berbagi sudah diperiksa (lihat, komentar, atau sunting)</label>
+    <label class="chk"><input type="checkbox"> Tidak ada klaim yang tidak bisa dipertanggungjawabkan</label>
+    <label class="chk"><input type="checkbox"> Konten buatan AI diberi keterangan bila perlu</label>
+    <label class="chk"><input type="checkbox"> Tidak memakai wajah atau suara orang nyata tanpa izin</label>
+  </div>
+
+  <div class="sheet">
+    <h3>E. Tiga pertanyaan refleksi</h3>
+    <ul class="plain">
+      <li>Bagian mana yang paling membantu hari ini?</li>
+      <li>Apa yang kamu ubah di percobaan kedua, dan apa dampaknya?</li>
+      <li>Di pekerjaanmu, apa yang akan kamu ulang dengan cara ini?</li>
+    </ul>
+  </div>
+</section>
+
+<section id="glosarium">
+  <h2>Glosarium untuk peserta</h2>
+  <p class="intro">Istilah yang sering membingungkan selama latihan.</p>
+  <button class="copy" type="button" data-target="glosarium">Salin glosarium</button>
+
+  <h3>Rumus R-K-T-F-B</h3>
+  <div class="rkt"><b>R</b><span>Peran (role): posisi yang diminta AI ambil, misalnya "copywriter media sosial"</span><b>K</b><span>Konteks: latar belakang, tujuan, atau situasi</span><b>T</b><span>Tugas (task): apa yang harus dikerjakan</span><b>F</b><span>Format: bentuk hasil yang diinginkan</span><b>B</b><span>Batasan (constraint): hal yang tidak boleh dilakukan</span></div>
+  <pre class="tpl">Kamu adalah copywriter media sosial. Konteks: saya menjual kopi bubuk untuk anak muda. Tugas: buat 3 hook video pendek. Format: daftar, satu hook per baris. Batasan: jangan membuat klaim kesehatan; tambahkan #ad bila diminta.</pre>
+
+  <h3>Skill Gemini</h3>
+  <dl>
+    <div class="term"><dt>Skill</dt><dd>Instruksi tersimpan yang membuat Gemini tahu cara mengerjakan satu jenis pekerjaan, sehingga tidak perlu dijelaskan ulang.</dd></div>
+    <div class="term"><dt>Name (nama)</dt><dd>Nama singkat skill. Tulis huruf kecil dengan tanda hubung, tanpa spasi.<span class="ex">Contoh: pembuat-hook-afiliasi</span></dd></div>
+    <div class="term"><dt>Description (deskripsi)</dt><dd>Penjelasan kapan skill dipakai. Gemini membacanya untuk memutuskan apakah skill relevan. Kalau terlalu umum, skill tidak aktif.<span class="ex">Contoh: "Dipakai saat saya minta hook untuk produk atau konten promosi."</span></dd></div>
+    <div class="term"><dt>Instructions (instruksi)</dt><dd>Aturan kerja skill: peran, langkah, bentuk hasil, dan batasan.</dd></div>
+    <div class="term"><dt>Customize dan Create</dt><dd>Customize adalah menu pengaturan Gemini. Di dalamnya ada Skills, lalu tombol Create untuk membuat skill baru.</dd></div>
+    <div class="term"><dt>Pair share</dt><dd>Berbagi hasil dengan rekan sebelah untuk saling melihat dan memberi satu masukan.</dd></div>
+  </dl>
+
+  <h3>Prompt dan gambar</h3>
+  <dl>
+    <div class="term"><dt>Prompt (perintah)</dt><dd>Teks yang kamu tulis untuk meminta AI membuat sesuatu. Makin jelas prompt, makin dekat hasilnya dengan bayanganmu.</dd></div>
+    <div class="term"><dt>Subjek, latar, cahaya, gaya</dt><dd>Empat bagian prompt gambar: apa yang digambar, tempatnya, pencahayaannya, dan tampilannya (misalnya foto produk atau ilustrasi).</dd></div>
+    <div class="term"><dt>Mode buat, ubah, lengkapi</dt><dd>Buat dimulai dari nol. Ubah mengedit gambar yang sudah ada. Lengkapi menambah bagian pada gambar yang sudah ada.</dd></div>
+    <div class="term"><dt>Gambar realis</dt><dd>Gambar yang tampak seperti foto sungguhan, bukan lukisan atau kartun.</dd></div>
+    <div class="term"><dt>Inpainting</dt><dd>Mengisi atau mengganti bagian tertentu di dalam gambar, sementara bagian lain tetap sama.<span class="ex">Contoh: mengganti warna baju tanpa mengubah wajah.</span></dd></div>
+    <div class="term"><dt>Outpainting</dt><dd>Memperluas gambar ke luar tepinya, misalnya menambah latar di sisi kiri foto.</dd></div>
+    <div class="term"><dt>Deskripsi gambar (alt text)</dt><dd>Kalimat singkat yang menjelaskan isi gambar untuk orang yang tidak bisa melihatnya.</dd></div>
+    <div class="term"><dt>Halusinasi</dt><dd>Ketika AI menghasilkan informasi atau klaim yang terdengar meyakinkan tetapi tidak benar. Periksa ulang hasil AI sebelum dipakai.</dd></div>
+  </dl>
+
+  <h3>Video</h3>
+  <dl>
+    <div class="term"><dt>Storyboard (papan cerita)</dt><dd>Rencana video dalam bentuk adegan-adegan pendek, berisi apa yang tampil dan apa yang dikatakan.</dd></div>
+    <div class="term"><dt>Adegan (scene)</dt><dd>Satu bagian video dengan satu gagasan utama. Latihan ini membatasi video menjadi lima adegan.</dd></div>
+    <div class="term"><dt>Draf</dt><dd>Versi awal video yang belum final. Wajar dibuat ulang beberapa kali.</dd></div>
+    <div class="term"><dt>Template</dt><dd>Kerangka desain siap pakai. Tinggal mengganti teks dan gambar di dalamnya.</dd></div>
+    <div class="term"><dt>Media bawaan</dt><dd>Gambar, ikon, atau klip yang sudah tersedia di Google Vids.</dd></div>
+    <div class="term"><dt>Takarir (caption, subtitle)</dt><dd>Teks yang menampilkan ucapan di layar, membantu penonton yang tidak bisa mendengar.</dd></div>
+    <div class="term"><dt>Transkrip</dt><dd>Naskah tertulis dari seluruh ucapan dalam video.</dd></div>
+    <div class="term"><dt>Pembuat klip, avatar, pengisi suara</dt><dd>Fitur AI di Google Vids. Pembuat klip membuat potongan video dari teks, avatar adalah presenter digital, dan pengisi suara membuat narasi dari tulisan. Fitur ini bisa berbeda di tiap akun.</dd></div>
+    <div class="term"><dt>Kedipan cepat</dt><dd>Cahaya yang berkedip terlalu sering dan bisa mengganggu sebagian orang, sehingga dihindari.</dd></div>
+    <div class="term"><dt>Izin lihat, komentar, sunting</dt><dd>Tingkat akses saat berbagi tautan. Lihat hanya bisa menonton, komentar bisa memberi catatan, sunting bisa mengubah isi. Pilih yang paling sempit sesuai kebutuhan.</dd></div>
+  </dl>
+
+  <h3>Akun dan batas</h3>
+  <dl>
+    <div class="term"><dt>Akun Google</dt><dd>Akun untuk masuk ke Gemini, ChatGPT, atau Google Vids. Pastikan sudah bisa masuk sebelum sesi.</dd></div>
+    <div class="term"><dt>Paket Workspace dan paket Google AI</dt><dd>Langganan yang menentukan fitur dan batas pemakaian. Fitur AI lanjutan biasanya hanya ada di paket tertentu.</dd></div>
+    <div class="term"><dt>Batas pemakaian (quota)</dt><dd>Jumlah pemakaian yang diizinkan dalam periode tertentu. Saat habis, fitur bisa ditolak sementara.</dd></div>
+  </dl>
+
+  <h3>Etika dan privasi</h3>
+  <dl>
+    <div class="term"><dt>Label konten AI</dt><dd>Keterangan bahwa gambar atau video dibuat dengan AI, agar penonton tidak tertipu.</dd></div>
+    <div class="term"><dt>Klaim produk</dt><dd>Pernyataan manfaat produk, misalnya "menyembuhkan". Klaim harus sesuai fakta dan bisa dibuktikan.</dd></div>
+    <div class="term"><dt>Afiliasi (affiliate)</dt><dd>Promosi produk orang lain dengan imbalan komisi bila ada pembelian lewat tautan kita.</dd></div>
+    <div class="term"><dt>#ad (disclosure)</dt><dd>Penanda bahwa unggahan adalah iklan atau berbayar, supaya penonton tahu isinya promosi.</dd></div>
+    <div class="term"><dt>Izin dan privasi</dt><dd>Memakai wajah, suara, atau data orang lain hanya boleh dengan persetujuan mereka. Foto benda atau presenter netral adalah pilihan aman.</dd></div>
+  </dl>
+
+  <h3>Istilah umum</h3>
+  <dl>
+    <div class="term"><dt>Worksheet peserta</dt><dd>Lembar kerja yang kamu isi selama latihan.</dd></div>
+    <div class="term"><dt>Prompt log</dt><dd>Catatan prompt yang kamu pakai beserta hasilnya, untuk melihat apa yang berhasil.</dd></div>
+    <div class="term"><dt>Catatan penggunaan AI</dt><dd>Catatan tim tentang kapan dan bagaimana AI dipakai, termasuk batasannya.</dd></div>
+    <div class="term"><dt>Aha moment</dt><dd>Momen ketika sesuatu mendadak terasa jelas. Tidak wajib dialami.</dd></div>
+    <div class="term"><dt>Output (keluaran)</dt><dd>Hasil yang diberikan AI, berupa teks, gambar, atau video.</dd></div>
+  </dl>
+</section>
+
+<footer>
+  <p>Dibuat dari tiga panduan fasilitator (5 November 2026). Cek nama menu dan fitur di akun sebelum sesi.</p>
+</footer>
+
+</main>
+
+<script>
+  document.querySelectorAll("button.copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById(btn.getAttribute("data-target"));
+      var text = el ? el.innerText : "";
+      var done = function () {
+        var old = btn.textContent;
+        btn.textContent = "Tersalin";
+        setTimeout(function () { btn.textContent = old; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () {});
+      }
+    });
+  });
+</script>
+</body>
+</html>
