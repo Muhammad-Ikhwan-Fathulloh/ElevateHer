@@ -1,0 +1,405 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Panduan Fasilitator ElevateHER</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky tab bar; jadwal as proportional timeline bar plus per-slot cards (waktu | apa yang dilakukan fasilitator). */
+:root{
+  --bg:#F3F5F9; --surface:#FFFFFF; --ink:#18233B; --muted:#586379; --line:#D8DEE8;
+  --accent:#0B7A75; --accent-soft:#DDF1EF;
+  --blue:#2F55A4; --blue-soft:#E3EAF7;
+  --violet:#6A4BB5; --violet-soft:#ECE6F8;
+  --warn:#B4540A; --warn-soft:#FDEBD9;
+  --green:#1E7A4B; --green-soft:#DFF2E7;
+  --code-bg:#EEF1F6;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --f-body:"Plus Jakarta Sans",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1626; --surface:#18223A; --ink:#E8ECF5; --muted:#A3AEC4; --line:#2B3856;
+  --accent:#4FC8C0; --accent-soft:#143B3B;
+  --blue:#8DB0F2; --blue-soft:#1D2D52;
+  --violet:#B79CF2; --violet-soft:#2C2250;
+  --warn:#F2A15F; --warn-soft:#3F2A16;
+  --green:#6FD79C; --green-soft:#16382A;
+  --code-bg:#111A2E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1626; --surface:#18223A; --ink:#E8ECF5; --muted:#A3AEC4; --line:#2B3856;
+  --accent:#4FC8C0; --accent-soft:#143B3B;
+  --blue:#8DB0F2; --blue-soft:#1D2D52;
+  --violet:#B79CF2; --violet-soft:#2C2250;
+  --warn:#F2A15F; --warn-soft:#3F2A16;
+  --green:#6FD79C; --green-soft:#16382A;
+  --code-bg:#111A2E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.05;font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(22px,3.2vw,30px);font-weight:800;margin-bottom:6px}
+h3{font-size:19px;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.lede{color:var(--muted);max-width:62ch;margin-top:10px}
+header{padding-block:12px 18px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 0;border-bottom:1px solid var(--line)}
+nav a{flex:none;text-decoration:none;color:var(--muted);font-weight:700;font-size:14px;padding:9px 14px;border-radius:999px;border:1px solid transparent}
+nav a[aria-current="true"]{background:var(--ink);color:var(--bg)}
+nav a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.tab{display:none;padding-top:22px}
+section.tab.on{display:block}
+.alert{display:flex;gap:14px;background:var(--warn-soft);border:1px solid var(--warn);color:var(--ink);border-radius:14px;padding:14px 16px;margin-top:18px}
+.alert b{color:var(--warn)}
+.alert svg{flex:none;width:26px;height:26px;color:var(--warn)}
+/* timeline bar */
+.bar{display:flex;gap:3px;margin:18px 0 6px;height:46px}
+.bar a{display:flex;align-items:center;justify-content:center;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;color:var(--ink);min-width:0;overflow:hidden}
+.bar a span{padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-bottom:22px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.c-buka{background:var(--blue-soft)}.c-konsep{background:var(--accent-soft)}.c-hukum{background:var(--warn-soft)}.c-build{background:var(--violet-soft)}.c-review{background:var(--green-soft)}.c-rest{background:var(--line)}
+/* slot cards */
+.slot{display:grid;grid-template-columns:104px 1fr;gap:0 18px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;scroll-margin-top:70px}
+.time{font-family:var(--f-mono);font-weight:500}
+.time b{display:block;font-size:22px;color:var(--ink);font-family:var(--f-display);font-weight:800}
+.time span{font-size:13px;color:var(--muted)}
+.chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-top:8px;color:var(--ink)}
+.slot h3{margin-bottom:8px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.box{border-radius:12px;padding:11px 13px;background:var(--code-bg);min-width:0}
+.box h4{margin:0 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.box ul{margin:0;padding-left:18px}
+.box li{margin:2px 0}
+.say{border-left:3px solid var(--accent);padding:2px 0 2px 12px;margin-top:10px;color:var(--ink);font-style:italic}
+.sub{margin-top:12px;display:grid;gap:8px}
+.step{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;background:var(--code-bg);border-radius:12px;padding:10px 12px}
+.step .t{font-family:var(--f-mono);font-size:13px;color:var(--violet);font-weight:500}
+.step ul{margin:4px 0 0;padding-left:18px;grid-column:2}
+.split{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-top:6px;grid-column:2}
+.split i{display:block}
+/* cards for other tabs */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.card .tag{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.card ul{padding-left:18px;margin:8px 0 0}
+.card li{margin:3px 0}
+pre{font-family:var(--f-mono);font-size:13.5px;line-height:1.55;background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.copy{margin-top:8px;font:700 13px var(--f-body);background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+.copy.ok{background:var(--green);color:#fff}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:12px}
+.checks{list-style:none;padding:0!important}
+.checks li{display:flex;gap:9px;align-items:flex-start}
+.checks li::before{content:"";flex:none;width:16px;height:16px;border:2px solid var(--muted);border-radius:4px;margin-top:4px}
+.note{color:var(--muted);font-size:14px;margin-top:10px}
+.pill{display:inline-block;font-weight:700;font-size:12px;border-radius:999px;padding:2px 9px;background:var(--warn-soft);color:var(--warn)}
+
+.subnav{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;margin-top:6px}
+.subnav button{flex:none;font:700 14px var(--f-body);background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer}
+.subnav button.on{background:var(--sc);border-color:var(--sc);color:var(--bg)}
+.pane{display:none;padding-top:14px}.pane.on{display:block}
+.phead{border-left:5px solid;padding:2px 0 2px 14px;margin-bottom:10px}
+.olist{margin:8px 0 0;padding-left:20px}.olist li{margin:8px 0}
+@media (max-width:640px){
+  .slot{grid-template-columns:1fr}
+  .time{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
+  .time b{font-size:20px}
+  .cols{grid-template-columns:1fr}
+  .bar a span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">ElevateHER · Sesi 3 · Sabtu, 7 November 2026</p>
+  <h1>Panduan Fasilitator<br>GenAI untuk Creator dan Affiliate</h1>
+  <p class="lede">Jam demi jam: apa yang kamu lakukan, apa yang peserta lakukan, dan apa yang perlu disiapkan. Ada juga cheatsheet peserta dan contoh Google Vids dengan produk tas.</p>
+  <div class="alert" role="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg>
+    <p><b>Penting, peserta memakai akun gratis.</b> Pembuatan gambar di ChatGPT punya jatah terbatas, dan fitur pembuat video AI di Google Vids dibatasi sekitar 15 detik per hasil. Rancang kerja kelompok di sekitar batas ini. Detailnya ada di tab <a href="#batas">Batas akun gratis</a>.</p>
+  </div>
+</header>
+
+<nav aria-label="Bagian panduan">
+  <a href="#jadwal">Jadwal fasilitator</a>
+  <a href="#bantu">Mendampingi peserta</a>
+  <a href="#batas">Batas akun gratis</a>
+  <a href="#cheatsheet">Cheatsheet peserta</a>
+  <a href="#contoh-tas">Contoh Vids: tas</a>
+</nav>
+
+<section class="tab" id="t-jadwal">
+  <h2>Jadwal 180 menit</h2>
+  <p class="lede" style="margin-top:0">Klik blok di bilah waktu untuk loncat ke jamnya. Lebar blok sebanding dengan durasi.</p>
+  <div class="bar" id="bar"></div>
+  <div class="legend">
+    <span><i class="c-buka"></i>Pembuka</span><span><i class="c-konsep"></i>Konsep</span><span><i class="c-hukum"></i>Hukum</span><span><i class="c-build"></i>Praktik</span><span><i class="c-review"></i>Review dan penutup</span><span><i class="c-rest"></i>Istirahat</span>
+  </div>
+  <div id="slots"></div>
+</section>
+
+<section class="tab" id="t-batas">
+  <h2>Batas akun gratis</h2>
+  <p class="lede">Batas ini bisa berubah dan berbeda antar akun. Uji satu hari sebelum sesi memakai akun gratis baru, bukan akun berbayar milikmu.</p>
+  <div class="grid">
+    <div class="card">
+      <p class="tag" style="color:var(--green)">ChatGPT · gambar</p>
+      <h3>Jatah pembuatan gambar terbatas</h3>
+      <p class="note" style="margin-top:6px">Akun gratis bisa berhenti membuat gambar di tengah latihan dan meminta menunggu.</p>
+      <ul>
+        <li>Tulis dan periksa prompt di worksheet dulu. Jalankan baru setelah kelompok sepakat.</li>
+        <li>Satu adegan, satu prompt. Jangan menekan ulang tanpa mengubah apa pun.</li>
+        <li>Ubah satu bagian per percobaan, supaya tiap jatah memberi pelajaran.</li>
+        <li>Satu akun bersama per kelompok, dipakai bergantian oleh pengetik.</li>
+        <li>Jatah habis: lanjutkan menulis prompt dan storyboard, gunakan media bawaan Google Vids, atau foto produk sendiri.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="tag" style="color:var(--violet)">Google Vids · video AI</p>
+      <h3>Maksimal sekitar 15 detik per generasi</h3>
+      <p class="note" style="margin-top:6px">Klip AI dari prompt pendek. Video utuh tetap bisa lebih panjang karena disusun dari banyak adegan.</p>
+      <ul>
+        <li>Naskah skill Gemini dibuat per adegan, narasi maksimal 15 kata, dibacakan dalam 10 detik.</li>
+        <li>Prompt klip diberi durasi: 5 sampai 10 detik.</li>
+        <li>Satu klip AI per adegan penting saja. Sisanya pakai gambar adegan dan teks.</li>
+        <li>Fitur AI tidak muncul: pakai template, teks, dan media bawaan.</li>
+        <li>Membuat dan menyunting video hanya di komputer.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="tag" style="color:var(--blue)">Gemini · skill</p>
+      <h3>Ada, tetapi terbatas</h3>
+      <ul>
+        <li>Menu Customize, lalu Skills, lalu Create, tersedia di akun gratis, tetapi pembuatan dan pemakaian skill dibatasi. Nama menu juga bisa berbeda tiap akun.</li>
+        <li>Batas tercapai atau menu tidak ketemu: tulis Instructions di chat biasa dan simpan sebagai catatan, lalu tempel setiap kali.</li>
+      </ul>
+    </div>
+  </div>
+  <h3 style="margin-top:26px">Uji sebelum sesi (15 menit)</h3>
+  <div class="card" style="margin-top:10px">
+    <ul class="checks">
+      <li>Gemini: berapa skill yang bisa dibuat dan berapa kali dipakai di akun gratis sebelum dibatasi?</li>
+      <li>ChatGPT: berapa gambar yang bisa dibuat sebelum diminta menunggu?</li>
+      <li>Google Vids: fitur klip AI muncul? Berapa detik hasil maksimalnya?</li>
+      <li>Google Vids: bagaimana cara mengunduh file video? Belum terkonfirmasi di materi.</li>
+      <li>Catat hasilnya, lalu sesuaikan pembagian waktu dan akun bersama.</li>
+    </ul>
+  </div>
+  <h3 style="margin-top:26px">Rencana cadangan</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Masalah</th><th>Tindakan</th></tr></thead>
+    <tbody>
+      <tr><td>Batas skill akun gratis tercapai atau menu tidak ketemu</td><td>Instructions ditulis di chat biasa, disimpan sebagai catatan</td></tr>
+      <tr><td>Jatah gambar habis</td><td>Prompt tetap ditulis lengkap, dieksekusi bergantian di satu akun; atau media bawaan Vids</td></tr>
+      <tr><td>Klip AI Vids tidak ada atau terlalu pendek</td><td>Susun dari gambar adegan, teks, dan musik bawaan</td></tr>
+      <tr><td>Peserta hanya punya ponsel</td><td>Pinjamkan laptop atau bekerja berpasangan</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="tab" id="t-bantu">
+<h2>Mendampingi peserta</h2>
+<p class="lede">Pilih bagian di bawah dan fokus pada satu stasiun. Tiap stasiun punya urutan yang sama: persiapan, alur dan titik cek, macet dan perbaikan cepat, tanda selesai, batas akun gratis.</p>
+<div class="subnav" role="tablist" aria-label="Pilih bagian pendampingan"><button type="button" role="tab" data-pane="p-umum" class="on" style="--sc:var(--accent)">Umum</button><button type="button" role="tab" data-pane="p-gemini" class="" style="--sc:var(--blue)">1 · Gemini Skills</button><button type="button" role="tab" data-pane="p-gambar" class="" style="--sc:var(--green)">2 · ChatGPT Gambar</button><button type="button" role="tab" data-pane="p-vids" class="" style="--sc:var(--violet)">3 · Google Vids</button><button type="button" role="tab" data-pane="p-craftion" class="" style="--sc:var(--warn)">Bonus · Craftion</button></div><div class="pane on" id="p-umum"><div class="phead" style="border-color:var(--accent)"><h3 style="color:var(--accent)">Cara mendampingi, berlaku untuk semua stasiun</h3><p class="note" style="margin-top:4px">Peranmu pelatih: membantu kelompok menemukan jawabannya sendiri, bukan mengetik untuk mereka.</p></div><h3 style="margin-top:18px">Tiga langkah tiap menghampiri kelompok</h3><div class="grid"><div class="card"><p class="tag" style="color:var(--blue)">1 · Amati 30 detik</p><h3>Lihat dulu</h3><p class='note' style='margin-top:6px'>Siapa yang mengetik, bagian worksheet mana yang dikerjakan, apakah semua ikut.</p></div><div class="card"><p class="tag" style="color:var(--accent)">2 · Tanya dulu</p><h3>Pancing</h3><p class='note' style='margin-top:6px'>Pakai pertanyaan di tab stasiun. Beri 1 menit menjawab.</p></div><div class="card"><p class="tag" style="color:var(--warn)">3 · Satu petunjuk</p><h3>Lalu pergi</h3><p class='note' style='margin-top:6px'>Beri satu petunjuk kecil. Kembali 3 sampai 4 menit kemudian.</p></div></div><h3 style="margin-top:22px">Tanda kelompok sedang macet</h3><div class="card" style="margin-top:10px"><ul class="checks"><li>Diam lebih dari 2 menit menatap layar</li><li>Mengetik ulang prompt yang sama tanpa mengubah apa pun</li><li>Satu orang memegang laptop, yang lain sibuk dengan ponsel</li><li>Worksheet kosong padahal prompt sudah dijalankan</li><li>Berdebat soal hasil lucu, lupa tujuan tahap</li></ul></div><h3 style="margin-top:22px">Dinamika kelompok</h3><div class="grid"><div class="card"><p class="tag" style="color:var(--ink)"></p><h3>Satu orang mendominasi</h3><ul class=""><li>Minta ganti peran: pengetik pindah ke pencatat.</li><li>Tanya anggota lain: hook mana yang lebih kuat menurutmu?</li></ul></div><div class="card"><p class="tag" style="color:var(--ink)"></p><h3>Peserta ragu mencoba</h3><ul class=""><li>Beri tugas kecil: bacakan langkah sebagai pemandu.</li><li>Hasil jelek itu data. Ubah satu hal, coba lagi.</li></ul></div><div class="card"><p class="tag" style="color:var(--ink)"></p><h3>Kelompok terlalu cepat</h3><ul class=""><li>Tantang: ubah nada, bandingkan dua versi.</li><li>Arahkan ke bonus Craftion bila waktu tersisa.</li></ul></div><div class="card"><p class="tag" style="color:var(--ink)"></p><h3>Kelompok tertinggal</h3><ul class=""><li>Kurangi jadi 3 adegan, satu klip AI saja.</li><li>Prioritas: naskah, gambar utama, lalu cek #ad.</li></ul></div></div><h3 style="margin-top:22px">Kalimat siap pakai</h3><div class="card" style="margin-top:10px"><p class="say">Bagian mana dari worksheet yang sedang kalian kerjakan sekarang?</p><p class="say">Kalau kamu penonton, apa yang membuat kamu berhenti menggulir?</p><p class="say">Ubah satu hal saja, jalankan lagi, lalu catat bedanya.</p><p class="say">Itu klaim. Di label tertulis begitu atau bukan?</p><p class="say">Siapa pemeriksanya sekarang? Coba bacakan checklist-nya.</p></div><h3 style="margin-top:22px">Checkpoint</h3><div class="grid"><div class="card"><p class="tag" style="color:var(--blue)">Menit ke-20 · sekitar 10:40</p><h3>Draf pertama</h3><ul class=""><li>Naskah skill ada dan fakta sesuai label?</li><li>Prompt gambar untuk minimal dua adegan?</li><li>Tertinggal: kurangi adegan.</li></ul></div><div class="card"><p class="tag" style="color:var(--violet)">Menit ke-45 · sekitar 11:05</p><h3>Uji dengan rubrik</h3><ul class=""><li>Hook, kualitas, prompt log, legal, presentasi.</li><li>Cek klaim, hak cipta gambar, #ad.</li><li>Sisa 15 menit untuk sunting dan siap demo.</li></ul></div></div><h3 style="margin-top:22px">Kapan membantu langsung</h3><div class="card" style="margin-top:10px"><ul class=""><li>Masalah teknis: menu tidak ada, akun gagal masuk, jatah habis. Bantu cari jalan cadangan.</li><li>Risiko etika: wajah orang lain tanpa izin, klaim kesehatan, tanpa #ad. Hentikan dan jelaskan alasannya.</li><li>Selain itu biarkan kelompok mencoba dan keliru dulu.</li></ul></div></div><div class="pane" id="p-gemini"><div class="phead" style="border-color:var(--blue)"><h3 style="color:var(--blue)">Stasiun 1 · Skill Gemini</h3><p class="note" style="margin-top:4px">12 menit: 4 menit kamu menjelaskan, 8 menit kelompok mengerjakan bersama. Hasil: satu skill tersimpan dan teruji.</p></div><div class="grid"><div class="card"><p class="tag" style="color:var(--blue)">A · Siapkan sebelum mulai</p><h3>Persiapan</h3><ul class=""><li>Lembar bahan sudah diisi: produk, tiga fakta label, penonton, pesan, ajakan.</li><li>Worksheet Skill Gemini terbuka, contoh pembuat-hook-afiliasi siap ditunjukkan.</li><li>Satu akun Gemini per kelompok, peran bergilir.</li></ul></div><div class="card"><p class="tag" style="color:var(--blue)">B · Alur dan titik cek</p><h3>Yang kamu lihat di tiap langkah</h3><ol class="olist"><li><b>Pilih satu pekerjaan</b><br><span class='note'>Satu skill untuk satu pekerjaan: hook, caption, atau naskah. Jangan campur.</span></li><li><b>Buka form Skills</b><br><span class='note'>Customize, lalu Skills, lalu Create. Batas akun gratis tercapai atau menu tampil berbeda: pindah ke chat biasa dan simpan Instructions sebagai catatan.</span></li><li><b>Isi Name, Description, Instructions</b><br><span class='note'>Cek empat unsur di Instructions: peran, langkah, format, batasan.</span></li><li><b>Uji di chat baru</b><br><span class='note'>Panggil dengan @nama-skill atau contoh permintaan. Bandingkan fakta hasil dengan lembar bahan.</span></li></ol></div></div><h3 style="margin-top:22px">C · Macet, pertanyaan pancingan, perbaikan cepat</h3><div class="tw"><table><thead><tr><th>Yang sering macet</th><th>Tanyakan</th><th>Perbaikan cepat</th></tr></thead><tbody><tr><td>Name memakai huruf besar atau spasi</td><td>Apa nama skill ini bila dibaca sekilas?</td><td>Huruf kecil dengan tanda hubung: pembuat-hook-afiliasi</td></tr><tr><td>Description terlalu umum</td><td>Kalimat apa yang kamu ketik agar skill ini aktif?</td><td>Tambah dua contoh permintaan dalam tanda kutip</td></tr><tr><td>Instructions satu kalimat, tanpa batasan</td><td>Apa yang tidak boleh dilakukan AI di sini?</td><td>Tambah peran, langkah, format, dan batasan: hanya fakta pengguna, #ad, tandai PERIKSA</td></tr><tr><td>Hasil mengarang fakta</td><td>Fakta ini ada di lembar bahan?</td><td>Tegaskan batasan, tempel tiga fakta label, hapus fakta di luar itu</td></tr><tr><td>Skill tidak bisa dibuat atau dipakai lagi (batas akun gratis)</td><td>Pesan apa yang tampil? Sudah berapa skill atau percobaan yang dipakai?</td><td>Tulis Instructions di chat biasa, simpan, tempel setiap kali</td></tr></tbody></table></div><div class="grid"><div class="card"><p class="tag" style="color:var(--blue)">D · Tanda selesai</p><h3>Kelompok siap pindah bila</h3><ul class="checks"><li>Skill tersimpan dengan Name, Description, Instructions</li><li>Diuji sekali dengan lembar bahan</li><li>Satu ubahan Instructions dicatat beserta dampaknya</li><li>Tidak ada fakta di luar tiga fakta label</li></ul></div><div class="card"><p class="tag" style="color:var(--warn)">E · Batas akun gratis</p><h3>Ingatkan peserta</h3><ul class=""><li>Menu Skills ada di akun gratis, tetapi jumlah atau pemakaiannya terbatas. Cek batasnya sebelum sesi, dan siapkan jalur chat biasa bila batas tercapai.</li><li>Jangan menjalankan tes berulang tanpa mengubah apa pun.</li></ul></div></div></div><div class="pane" id="p-gambar"><div class="phead" style="border-color:var(--green)"><h3 style="color:var(--green)">Stasiun 2 · Gambar ChatGPT</h3><p class="note" style="margin-top:4px">15 menit: 4 menit kamu menjelaskan, 11 menit kelompok mengerjakan. Hasil: satu seri gambar adegan yang konsisten.</p></div><div class="grid"><div class="card"><p class="tag" style="color:var(--green)">A · Siapkan sebelum mulai</p><h3>Persiapan</h3><ul class=""><li>Hasil naskah dari stasiun 1 sudah ada (ide gambar tiap adegan).</li><li>Worksheet Gambar ChatGPT terbuka, rumus 8 bagian siap ditunjukkan.</li><li>Satu akun ChatGPT per kelompok. Jatah gambar terbatas: sepakati prompt mana yang dijalankan dulu.</li></ul></div><div class="card"><p class="tag" style="color:var(--green)">B · Alur dan titik cek</p><h3>Yang kamu lihat di tiap langkah</h3><ol class="olist"><li><b>Pilih satu tugas</b><br><span class='note'>A sampul, B foto produk, C gambar pendukung. Untuk alur kelompok, ikuti ide gambar naskah.</span></li><li><b>Isi delapan bagian prompt</b><br><span class='note'>Subjek, aksi, latar, gaya, komposisi, cahaya, warna dan mood, kualitas. Gabungkan jadi satu kalimat.</span></li><li><b>Jalankan dan catat</b><br><span class='note'>Satu percobaan satu perubahan. Catat yang diubah dan hasilnya.</span></li><li><b>Ubah dan lengkapi</b><br><span class='note'>Pola Ubah X, pertahankan Y. Inpainting atau outpainting; tanpa alat pilih area, jelaskan lewat kata-kata.</span></li><li><b>Periksa dan beri deskripsi</b><br><span class='note'>Cek logo, tulisan, tangan, jumlah kantong. Tulis teks alternatif 1 sampai 2 kalimat.</span></li></ol></div></div><h3 style="margin-top:22px">C · Macet, pertanyaan pancingan, perbaikan cepat</h3><div class="tw"><table><thead><tr><th>Yang sering macet</th><th>Tanyakan</th><th>Perbaikan cepat</th></tr></thead><tbody><tr><td>Prompt hanya satu frasa</td><td>Dari 8 bagian, mana yang belum terisi?</td><td>Isi semua bagian lalu gabung jadi satu kalimat</td></tr><tr><td>Ada logo atau tulisan aneh</td><td>Apa yang ada di gambar tapi tidak ada di label?</td><td>Tambah: tanpa tulisan, tanpa logo</td></tr><tr><td>Seluruh gambar berubah saat diedit</td><td>Bagian mana yang harus tetap?</td><td>Tulis dua kalimat: Ubah [A]. Pertahankan [B]</td></tr><tr><td>Gaya antar adegan tidak konsisten</td><td>Apa yang sama di semua adegan?</td><td>Kirim prompt dasar sekali: gaya, warna, cahaya, rasio 16:9</td></tr><tr><td>Jatah gambar habis</td><td>Prompt mana yang paling penting?</td><td>Lanjut menulis prompt dan storyboard, pakai media bawaan Vids atau foto produk sendiri, jalankan bergantian di satu akun</td></tr></tbody></table></div><div class="grid"><div class="card"><p class="tag" style="color:var(--green)">D · Tanda selesai</p><h3>Kelompok siap pindah bila</h3><ul class="checks"><li>Minimal satu gambar per adegan utama, atau prompt lengkap bila jatah habis</li><li>Diperiksa: tanpa logo, tulisan, dan klaim yang tidak ada di label</li><li>Teks alternatif ditulis</li><li>Satu ubahan dicatat beserta dampaknya</li></ul></div><div class="card"><p class="tag" style="color:var(--warn)">E · Batas akun gratis</p><h3>Ingatkan peserta</h3><ul class=""><li>Jatah pembuatan gambar terbatas dan bisa habis di tengah latihan.</li><li>Periksa dan sepakati prompt sebelum menekan jalankan.</li><li>Satu adegan satu prompt. Jangan menekan ulang tanpa perubahan.</li></ul></div></div></div><div class="pane" id="p-vids"><div class="phead" style="border-color:var(--violet)"><h3 style="color:var(--violet)">Stasiun 3 · Google Vids</h3><p class="note" style="margin-top:4px">25 menit: 5 menit kamu menjelaskan, 20 menit kelompok mengerjakan. Hasil: satu video pendek dari storyboard dan gambar.</p></div><div class="grid"><div class="card"><p class="tag" style="color:var(--violet)">A · Siapkan sebelum mulai</p><h3>Persiapan</h3><ul class=""><li>Naskah dan gambar adegan dari stasiun 1 dan 2 sudah ada.</li><li>Laptop dan akun Google siap. Google Vids hanya untuk membuat dan menyunting di komputer.</li><li>Worksheet Google Vids terbuka, storyboard 5 adegan siap.</li></ul></div><div class="card"><p class="tag" style="color:var(--violet)">B · Alur dan titik cek</p><h3>Yang kamu lihat di tiap langkah</h3><ol class="olist"><li><b>Pilih topik dan satu pesan</b><br><span class='note'>Satu kalimat pesan utama. Penonton jelas.</span></li><li><b>Storyboard 5 adegan</b><br><span class='note'>Pembuka, masalah, inti, bukti, ajakan. Narasi maksimal 15 kata, 10 detik per adegan.</span></li><li><b>Mulai di Vids</b><br><span class='note'>Pilih titik awal: template, Slides, rekaman, atau kosong dengan AI.</span></li><li><b>Isi adegan</b><br><span class='note'>Tempel narasi, unggah gambar, satu klip AI untuk adegan penting.</span></li><li><b>Sunting, takarir, bagikan</b><br><span class='note'>Teks besar dan kontras, takarir dicek, izin berbagi dibatasi. Cara mengunduh file belum terkonfirmasi.</span></li></ol></div></div><h3 style="margin-top:22px">C · Macet, pertanyaan pancingan, perbaikan cepat</h3><div class="tw"><table><thead><tr><th>Yang sering macet</th><th>Tanyakan</th><th>Perbaikan cepat</th></tr></thead><tbody><tr><td>Pesan lebih dari satu</td><td>Satu kalimat: apa yang penonton ingat?</td><td>Pilih satu pesan, pindahkan yang lain ke video berikutnya</td></tr><tr><td>Narasi terlalu panjang</td><td>Bisa dibaca dalam 10 detik?</td><td>Maksimal 15 kata, satu ide per adegan</td></tr><tr><td>Menu atau fitur tidak ketemu</td><td>Kalian di komputer dan akun Google yang sama?</td><td>Pindah ke laptop; baca nama menu yang tampil; tanpa fitur AI pakai template</td></tr><tr><td>Klip AI hanya sekitar 15 detik atau gagal</td><td>Berapa detik yang kalian minta?</td><td>Minta 5 sampai 10 detik, satu klip saja, sisanya gambar dan teks</td></tr><tr><td>Teks kecil, tanpa takarir, berbagi terlalu terbuka</td><td>Terbaca di ponsel? Siapa yang bisa membuka tautan ini?</td><td>Perbesar teks, tambah takarir, lihat atau komentar saja</td></tr></tbody></table></div><div class="grid"><div class="card"><p class="tag" style="color:var(--violet)">D · Tanda selesai</p><h3>Kelompok siap pindah bila</h3><ul class="checks"><li>Video 5 adegan bisa diputar dari awal sampai akhir</li><li>Satu pesan utama, teks besar dan kontras</li><li>Takarir dicek</li><li>#ad dan keterangan bantuan AI terpasang</li><li>Nama video: topik-namamu, berbagi diatur</li></ul></div><div class="card"><p class="tag" style="color:var(--warn)">E · Batas akun gratis</p><h3>Ingatkan peserta</h3><ul class=""><li>Klip AI Google Vids gratis dibatasi sekitar 15 detik per hasil.</li><li>Video utuh tetap bisa lebih panjang bila disusun dari beberapa adegan.</li><li>Fitur AI tidak muncul: pakai template, teks, dan media bawaan.</li></ul></div></div></div><div class="pane" id="p-craftion"><div class="phead" style="border-color:var(--warn)"><h3 style="color:var(--warn)">Bonus · Craftion</h3><p class="note" style="margin-top:4px">Hanya untuk kelompok yang selesai lebih cepat. Bukan bagian wajib dari alur 60 menit. Hasil: video motion dari JSON buatan Claude.</p></div><div class="grid"><div class="card"><p class="tag" style="color:var(--warn)">A · Siapkan sebelum mulai</p><h3>Persiapan</h3><ul class=""><li>Storyboard 5 slide dari stasiun Vids siap dipakai ulang.</li><li>Akun Claude untuk membuat JSON, laptop dengan browser, situs craftion.nocturnailed.com.</li><li>Video dari stasiun Vids sudah selesai atau hampir selesai.</li></ul></div><div class="card"><p class="tag" style="color:var(--warn)">B · Alur dan titik cek</p><h3>Yang kamu lihat di tiap langkah</h3><ol class="olist"><li><b>Tulis storyboard 5 slide</b><br><span class='note'>Hook, masalah, inti dan bukti, ajakan. Pilih format 16:9, 1:1, atau 9:16.</span></li><li><b>Minta Claude membuat JSON</b><br><span class='note'>Gunakan prompt peran, tugas, konteks, format, batasan. Maksimal 15 kata per slide, jangan mengarang.</span></li><li><b>Impor ke Craftion</b><br><span class='note'>Start creating free, lalu Build with AI, tempel JSON, lalu Import JSON.</span></li><li><b>Sunting dan ekspor</b><br><span class='note'>Teks singkat dan besar. Semua elemen muncul dalam 3 detik pertama. Ekspor MP4, cadangan PNG atau PDF.</span></li></ol></div></div><h3 style="margin-top:22px">C · Macet, pertanyaan pancingan, perbaikan cepat</h3><div class="tw"><table><thead><tr><th>Yang sering macet</th><th>Tanyakan</th><th>Perbaikan cepat</th></tr></thead><tbody><tr><td>JSON gagal diimpor</td><td>Pesan kesalahan apa yang tampil?</td><td>Salin pesan kesalahan ke Claude dan minta JSON diperbaiki</td></tr><tr><td>Teks terlalu banyak</td><td>Berapa kata di slide ini?</td><td>Potong jadi maksimal 15 kata per slide</td></tr><tr><td>Elemen muncul terlalu lambat</td><td>Muncul dalam 3 detik pertama?</td><td>Minta Claude mempercepat animasi masuk</td></tr><tr><td>Ekspor tidak jalan</td><td>Ekspor MP4 terjadi di browser kalian, bukan di sini</td><td>Coba browser lain; pakai cadangan PNG atau PDF</td></tr></tbody></table></div><div class="grid"><div class="card"><p class="tag" style="color:var(--warn)">D · Tanda selesai</p><h3>Kelompok siap pindah bila</h3><ul class="checks"><li>JSON berhasil diimpor</li><li>Teks singkat dan besar</li><li>Semua elemen muncul dalam 3 detik pertama</li><li>Berkas MP4 atau cadangan PNG atau PDF tersimpan</li></ul></div><div class="card"><p class="tag" style="color:var(--warn)">E · Batas akun gratis</p><h3>Ingatkan peserta</h3><ul class=""><li>Gunakan jalur Start creating free.</li><li>Ekspor MP4 berlangsung di browser peserta.</li></ul></div></div></div>
+</section>
+
+<section class="tab" id="t-cheatsheet">
+  <h2>Cheatsheet peserta</h2>
+  <p class="lede">Satu halaman untuk dibuka sepanjang praktik. Tombol Salin memindahkan template ke Gemini atau ChatGPT. Ganti teks dalam [KURUNG SIKU].</p>
+  <div class="alert" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg><p><b>Akun gratis ada batasnya.</b> Gambar ChatGPT punya jatah, dan klip AI Google Vids sekitar 15 detik. Periksa prompt sebelum menjalankan.</p></div>
+  <div class="grid" id="cheats"></div>
+</section>
+
+<section class="tab" id="t-contoh-tas">
+  <h2>Contoh Google Vids: Tas Selempang Jalan</h2>
+  <p class="lede">Lanjutan contoh tas fiktif (poliester, 250 gram, 3 kantong) dari naskah skill dan gambar. Isian ini contoh yang ditulis untuk panduan, belum diuji di Google Vids. Hasil di akunmu akan berbeda.</p>
+  <div class="grid" id="tas"></div>
+</section>
+</div>
+
+<script>
+var esc=function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
+var PH={buka:"c-buka",konsep:"c-konsep",hukum:"c-hukum",build:"c-build",review:"c-review",rest:"c-rest"};
+var PHN={buka:"Pembuka",konsep:"Konsep",hukum:"Hukum",build:"Praktik",review:"Review",rest:"Istirahat"};
+var SLOTS=[
+{id:"s0900",t:"09:00",m:5,ph:"buka",n:"Opening",title:"Opening dan energizer",
+ f:["Sambut peserta dan sebutkan tujuan: dari ide mentah ke konten siap publikasi.","Mulai cerita dari lapangan: tiap peserta 1 menit tentang praktik GenAI minggu lalu.","Pasangkan peserta dengan buddy untuk kenalan."],
+ p:["Berbagi: apa yang dicoba, hasilnya, apa yang dipelajari."],
+ s:["Slide opening dan energizer"],
+ say:"Ceritakan satu hal yang kamu coba dengan GenAI minggu ini. Cukup satu menit."},
+{id:"s0905",t:"09:05",m:5,ph:"buka",n:"Perkuat prompt",title:"Perkuat prompt dengan Claude",
+ f:["Jelaskan pembagian alat: Claude untuk prompt penting, Gemini untuk naskah dan skill, ChatGPT untuk gambar.","Tampilkan alur tiga langkah: tulis draf, tanya Claude, pakai dan uji.","Demo draf lemah: Buatkan caption botol minum. Lalu minta Claude memperbaikinya."],
+ p:["Mencoba satu draf sendiri dalam 2 menit."],
+ s:["Akun Claude untuk demo"],
+ say:"Claude membantu menyusun. Fakta, klaim, dan disclosure tetap kamu periksa sendiri."},
+{id:"s0910",t:"09:10",m:10,ph:"konsep",n:"GenAI creator",title:"GenAI di alur kerja creator",
+ f:["Tunjukkan alur: riset lewat chat, integrasi API, dan real-time.","Satu contoh nyata dari ide mentah ke hook.","Sebut rumus R-K-T-F-B dan beri satu contoh isi."],
+ p:["Menyimak, lalu menyebut satu pekerjaan creator yang bisa dibantu AI."],
+ s:["Contoh prompt konten afiliasi"]},
+{id:"s0920",t:"09:20",m:20,ph:"konsep",n:"Adopsi",title:"Ladder check dan adopsi GenAI",
+ f:["09:20: peserta menilai posisi di tangga adopsi. Gallery walk 5 menit.","09:30: bahas pola dan faktor adopsi. Minta tiap peserta memilih satu pola.","Berkeliling dan catat siapa yang masih di anak tangga bawah."],
+ p:["Berjalan melihat tempelan, memilih satu pola adopsi."]},
+{id:"s0940",t:"09:40",m:15,ph:"hukum",n:"Hukum",title:"Hukum, HKI, dan disclosure",
+ f:["Jelaskan enam hal yang dijaga: hak cipta, atribusi, disclosure, klaim, privasi, lisensi tool.","Bagikan kartu kasus: boleh, perlu izin, atau jangan.","Ingatkan checklist ini dipakai lagi saat build dan cek kualitas.","Tekankan: ragu, anggap perlu izin dulu."],
+ p:["Memilah kartu kasus dalam kelompok kecil, membacakan alasannya."],
+ s:["Kartu kasus dicetak atau di layar"],
+ say:"#ad di awal caption, dan diucapkan juga di video."},
+{id:"s0955",t:"09:55",m:15,ph:"buka",n:"Briefing",title:"Briefing proyek dan tim",
+ f:["Bentuk kelompok A, B, dan C. Bagikan peran: pengetik, pemandu, pemeriksa, pencatat.","Bantu mengisi Project Charter.","Tunjukkan rubrik usulan dan jelaskan itu masih usulan."],
+ p:["Memilih peran awal, mengisi charter singkat."],
+ s:["Tautan folder worksheet di Drive untuk tiga stasiun"]},
+{id:"s1010",t:"10:10",m:10,ph:"rest",n:"Istirahat",title:"Istirahat 10 menit",
+ f:["Pastikan semua laptop menyala dan masuk ke akun Gemini, ChatGPT, dan Google.","Uji cepat satu akun per kelompok: bisa membuka menu Skills dan Google Vids?"],
+ p:["Siapkan laptop dan akun."],
+ s:["Colokan, Wi-Fi, akun gratis siap"]},
+{id:"s1020",t:"10:20",m:60,ph:"build",n:"Build 60",title:"Build content: tiga stasiun, dikerjakan bersama",
+ build:true,
+ f:["Jelaskan satu tahap dulu, lalu seluruh kelompok mengerjakannya bersama. Tahap berikutnya baru dijelaskan setelah semua selesai.","Kelompok memilih ide dari daftar 12 ide, atau ide sendiri. Jangan ditentukan untuk mereka.","Menit ke-20 (sekitar 10:40) dan menit ke-45 (sekitar 11:05): checkpoint bersama mentor."],
+ p:["Satu layar bersama per kelompok, peran bergilir tiap tahap."],
+ steps:[
+  {t:"10:20 – 10:32",m:12,name:"Skill Gemini",ex:4,wk:8,col:"var(--blue)",
+   fl:["Jelaskan 3 isian: Name, Description, Instructions.","Tunjukkan contoh pembuat-hook-afiliasi.","Kelompok menempel Instructions, menguji dengan lembar bahan."],
+   tip:"Batas skill tercapai: pakai chat biasa."},
+  {t:"10:32 – 10:47",m:15,name:"Gambar ChatGPT",ex:4,wk:11,col:"var(--green)",
+   fl:["Jelaskan rumus 8 bagian dan pola ubah X pertahankan Y.","Satu adegan satu gambar. Kirim prompt dasar sekali.","Peringatkan jatah gambar akun gratis."],
+   tip:"Prompt diperiksa sebelum dijalankan."},
+  {t:"10:47 – 11:12",m:25,name:"Video Google Vids",ex:5,wk:20,col:"var(--violet)",
+   fl:["Jelaskan: komputer saja, mulai dari kosong dengan AI atau template.","Tiap adegan 10 detik, klip AI maksimal sekitar 15 detik.","Checkpoint menit ke-45 sekitar 11:05: uji dengan rubrik."],
+   tip:"Satu klip AI per adegan penting."},
+  {t:"Bonus",lbl:"di luar 60 menit, hanya bila ada waktu sisa",name:"Craftion: video motion",ex:0,wk:0,col:"var(--warn)",
+   fl:["Untuk kelompok yang selesai lebih cepat. Tidak wajib.","Storyboard 5 slide dipakai ulang, Claude membuat JSON, impor ke craftion.nocturnailed.com.","Teks maksimal 15 kata per slide, semua elemen muncul dalam 3 detik pertama, ekspor MP4."],
+   tip:"Hanya bila Vids sudah selesai dan masih ada waktu."},
+  {t:"11:12 – 11:20",m:8,name:"Cek klaim, #ad, takarir",ex:0,wk:8,col:"var(--warn)",
+   fl:["Pemeriksa membacakan checklist, kelompok menjawab ya atau tidak.","Perbaiki yang belum lolos."],
+   tip:"Tidak lolos, tidak dibagikan."}
+ ],
+ s:["Worksheet tiap stasiun","Papan peran kelompok"]},
+{id:"s1120",t:"11:20",m:15,ph:"review",n:"Cek kualitas",title:"Cek kualitas dan etika",
+ f:["Pandu checklist: klaim, hak cipta, disclosure, label dibuat dengan AI.","Minta tiap kelompok mengisi Catatan Penggunaan AI satu halaman.","Bantu tim yang belum selesai menyiapkan demo."],
+ p:["Memeriksa karya sendiri, mengisi prompt log minimal 5 prompt."],
+ s:["Contoh prompt log dan Catatan Penggunaan AI"]},
+{id:"s1135",t:"11:35",m:20,ph:"review",n:"Demo expo",title:"Demo expo dan feedback",
+ f:["Atur giliran: tiap tim 3 menit demo, lalu 2 menit feedback.","Feedback berisi satu hal bagus, satu perbaikan, satu ide tambahan.","Tiap peserta memilih satu konten Paling Menarik Dibagikan. Penilaian resmi dari trainer dan mentor."],
+ p:["Tampil, memberi feedback, memilih konten favorit."],
+ s:["Timer dan layar proyektor"]},
+{id:"s1155",t:"11:55",m:5,ph:"review",n:"Penutup",title:"Penutup dan refleksi",
+ f:["Start, Stop, Continue: satu kalimat tiap kolom.","Tiga hal dibawa pulang: ide mentah jadi konten dengan review manusia; selalu cek hak cipta, klaim, disclosure; catat prompt.","Info tindak lanjut: revisi konten, rencana publikasi 30 hari, Mentorconnect 3, survei akhir."],
+ p:["Menulis Start, Stop, Continue."]}
+];
+function slotHTML(s){
+  var h='<article class="slot" id="'+s.id+'"><div class="time"><b>'+s.t+'</b><span>'+s.m+' menit</span><br><span class="chip '+PH[s.ph]+'">'+PHN[s.ph]+'</span></div><div><h3>'+esc(s.title)+'</h3>';
+  if(s.say) h+='<p class="say">'+esc(s.say)+'</p>';
+  h+='<div class="cols"><div class="box"><h4>Fasilitator</h4><ul>'+s.f.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div><div class="box"><h4>Peserta</h4><ul>'+(s.p||[]).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>'+(s.s?'<h4 style="margin-top:8px">Siapkan</h4><ul>'+s.s.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div></div>';
+  if(s.steps){h+='<div class="sub">'+s.steps.map(function(t){
+    var tot=t.ex+t.wk;
+    return '<div class="step"><span class="t">'+t.t+'</span><div><b style="color:'+t.col+'">'+esc(t.name)+'</b> · '+(t.lbl||(t.ex?'jelaskan '+t.ex+' menit, kerja '+t.wk+' menit':'kerja '+t.wk+' menit'))+'</div><ul>'+t.fl.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'<li><span class="pill">Ingat</span> '+esc(t.tip)+'</li></ul>'+(t.ex?'<div class="split" aria-hidden="true"><i style="flex:'+t.ex+';background:'+t.col+';opacity:.45"></i><i style="flex:'+t.wk+';background:'+t.col+'"></i></div>':'')+'</div>'}).join('')+'</div>';}
+  return h+'</div></article>';
+}
+document.getElementById("slots").innerHTML=SLOTS.map(slotHTML).join("");
+document.getElementById("bar").innerHTML=SLOTS.map(function(s){return '<a href="#jadwal" data-go="'+s.id+'" class="'+PH[s.ph]+'" style="flex:'+s.m+'" title="'+s.t+' '+esc(s.n)+'"><span>'+s.t+'</span></a>'}).join("");
+document.getElementById("bar").addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;e.preventDefault();var el=document.getElementById(a.getAttribute("data-go"));if(el)el.scrollIntoView({behavior:"smooth",block:"start"})});
+
+var CHEATS=[
+{tag:"1 · Rumus prompt",c:"var(--accent)",h:"R-K-T-F-B",
+ ul:["R Peran: posisi yang diambil AI","K Konteks: produk, audiens, platform","T Tugas: apa yang dikerjakan","F Format: bentuk hasil","B Batasan: yang tidak boleh dilakukan"],
+ code:"Kamu adalah [PERAN]. Konteks: [PRODUK, PENONTON, PLATFORM]. Tugas: [TUGAS]. Format: [FORMAT]. Batasan: hanya pakai fakta dari saya, tanpa klaim kesehatan, tulis #ad bila berbayar."},
+{tag:"2 · Skill Gemini",c:"var(--blue)",h:"Name, Description, Instructions",
+ ul:["Name: huruf kecil, pakai tanda hubung","Description: kapan dipakai, plus contoh permintaan","Instructions: peran, langkah, format, batasan","Uji dengan tugas nyata, ubah satu hal, uji lagi"],
+ code:"Name: pembuat-hook-afiliasi\nDescription: Dipakai saat saya minta [PEKERJAAN]. Contoh: buatkan hook untuk produk ini.\nInstructions:\nPeran: [PERAN].\nTanya dulu: [BAHAN], maksimal 3 pertanyaan.\nLangkah: [LANGKAH KERJA].\nFormat: [BENTUK HASIL].\nBatasan: hanya info dari pengguna. Tanpa klaim kesehatan. #ad bila berbayar. Tandai PERIKSA."},
+ {tag:"3 · Prompt gambar",c:"var(--green)",h:"8 bagian jadi satu kalimat",
+ ul:["Subjek · aksi · latar · gaya","Komposisi · cahaya · warna dan mood · kualitas","Gambar ChatGPT gratis ada jatah: periksa prompt dulu","Ubah satu bagian per percobaan"],
+ code:"Foto realistis [SUBJEK dan AKSI], [LATAR], [SUDUT dan KOMPOSISI], [CAHAYA], [WARNA dan MOOD], detail tinggi, format 16:9, tanpa tulisan dan tanpa logo."},
+{tag:"4 · Ubah dan lengkapi",c:"var(--green)",h:"Ubah X, pertahankan Y",
+ ul:["Inpainting: isi atau ganti bagian di dalam gambar","Outpainting: perluas gambar keluar bingkai","Tidak ada alat pilih area: sebut bagiannya dengan kata-kata"],
+ code:"Ubah [YANG BOLEH BERUBAH]. Pertahankan [YANG HARUS TETAP], tanpa menambah tulisan atau logo."},
+{tag:"5 · Storyboard video",c:"var(--violet)",h:"5 adegan, satu ide tiap adegan",
+ ul:["1 Pembuka menarik · 2 Masalah · 3 Inti pesan · 4 Contoh atau bukti · 5 Penutup dan ajakan","Narasi maksimal 15 kata per adegan","Klip AI Google Vids gratis sekitar 15 detik maksimal"],
+ code:"Adegan [NOMOR] ([FUNGSI]): narasi [MAKS 15 KATA]. Gambar: [NAMA BERKAS]. Durasi: 10 detik."},
+{tag:"6 · Prompt klip AI",c:"var(--violet)",h:"Subjek, aksi, latar, kamera, gaya, cahaya",
+ ul:["Selalu sebut durasi pendek","Hindari wajah orang nyata","Tidak muncul di akunmu? Pakai media bawaan"],
+ code:"[SUBJEK] [AKSI] di [LATAR], kamera [GERAK KAMERA], gaya [GAYA], cahaya [CAHAYA], [5 sampai 10] detik."},
+{tag:"7 · Bonus Craftion",c:"var(--warn)",h:"Video motion dari JSON buatan Claude",
+ ul:["Langkah: Start creating free, lalu Build with AI, tempel JSON, lalu Import JSON","Gagal impor: salin pesan kesalahan ke Claude, minta diperbaiki","Teks singkat dan besar, elemen muncul dalam 3 detik pertama","Ekspor MP4, cadangan PNG atau PDF"],
+ code:"Kamu motion designer untuk Craftion. Tugas: buat deck 5 slide berformat JSON. Konteks: topik [TOPIK], pesan utama [PESAN]. Storyboard: [TEMPEL STORYBOARD]. Format: 9:16 (atau 16:9 atau 1:1). Batasan: Bahasa Indonesia, maksimal 15 kata per slide, jangan mengarang fakta."},
+{tag:"8 · Sebelum dibagikan",c:"var(--warn)",h:"Lima cek terakhir",
+ check:["Klaim benar dan tidak berlebihan","#ad atau #sponsored terlihat jelas","Gambar, musik, dan sumber punya izin","Takarir sudah dibaca dan diperbaiki","Dibuat dengan bantuan AI diberi keterangan"]},
+{tag:"9 · Jika macet",c:"var(--warn)",h:"Cepat selesaikan",
+ ul:["Hasil melenceng: tambah audiens, platform, dan batasan di prompt","Jatah gambar habis: lanjutkan prompt dan storyboard dulu","Menu tidak ketemu: baca nama menu yang tampil, tanya fasilitator","Hasil terlalu panjang: tambah maksimal [JUMLAH] kata"]}
+];
+function cheatHTML(c,i){
+  var h='<div class="card"><p class="tag" style="color:'+c.c+'">'+esc(c.tag)+'</p><h3>'+esc(c.h)+'</h3>';
+  if(c.ul)h+='<ul>'+c.ul.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>';
+  if(c.check)h+='<ul class="checks">'+c.check.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>';
+  if(c.code){h+='<pre id="cc'+i+'"></pre><button class="copy" data-for="cc'+i+'">Salin</button>';}
+  return h+'</div>';
+}
+document.getElementById("cheats").innerHTML=CHEATS.map(cheatHTML).join("");
+CHEATS.forEach(function(c,i){if(c.code)document.getElementById("cc"+i).textContent=c.code});
+
+var TAS=[
+{tag:"Langkah 1 · topik",c:"var(--accent)",h:"Pilih topik dan pesan",
+ rows:[["Topik","Review ringkas Tas Selempang Jalan (fiktif)"],["Pesan utama","Tas ringan dengan tiga kantong untuk hari kuliah"],["Penonton","Mahasiswa"],["Format","Vertikal (TikTok, Reels, Shorts)"],["Berbayar","Ya, afiliasi, tulis #ad"]]},
+{tag:"Langkah 2 · storyboard",c:"var(--violet)",h:"5 adegan, tiap adegan 10 detik",
+ table:[["Adegan","Fungsi","Narasi (maks 15 kata)","Media"],
+  ["1","Pembuka","3 kantong, 250 gram. Cukup buat hari sibukmu?","adegan-1 (tas di sandaran kursi)"],
+  ["2","Masalah","Ke kuliah bawa banyak barang, tapi tas jangan berat.","adegan-5 (tas di bahu, dari belakang)"],
+  ["3","Inti pesan","Tas selempang poliester dengan 3 kantong, sesuai label.","adegan-2 (kain poliester, close-up)"],
+  ["4","Bukti","Muat ponsel, charger, dan alat tulis. Bobot 250 gram.","adegan-4 (tas terbuka, flat lay)"],
+  ["5","Ajakan","Cek detail di tautan bio. #ad","adegan-6 (tas di latar krem)"]]},
+{tag:"Langkah 3 · mulai",c:"var(--blue)",h:"Pilih titik awal",
+ rows:[["Pilihan","Kosong dengan bantuan AI, atau template bila fitur AI tidak muncul"],["Masuk","Akun Google, di browser komputer"],["Catatan","Fitur berbeda menurut akun dan paket. Bila tidak tampil, tanya fasilitator"]]},
+{tag:"Langkah 4 · isi adegan",c:"var(--violet)",h:"Narasi, media, satu klip AI",
+ ul:["Salin narasi tiap adegan dari storyboard","Unggah gambar hasil ChatGPT dari Drive atau komputer","Pakai satu klip AI saja, di adegan 2, karena hasil gratis sekitar 15 detik","Putar dari awal sampai akhir"],
+ code:"Seorang mahasiswa berjalan di koridor kampus menyandang tas selempang abu-abu polos tanpa logo, difoto dari belakang bahu, kamera mengikuti pelan, gaya sinematik, cahaya pagi hangat, 5 detik."},
+{tag:"Percobaan",c:"var(--violet)",h:"Ubah satu hal setiap kali",
+ table:[["No","Yang diubah","Hasil (diisi peserta)"],["1","Draf awal","Diisi peserta"],["2","Teks adegan 1 dipendekkan jadi 8 kata","Diisi peserta"]]},
+{tag:"Langkah 5 · sunting",c:"var(--green)",h:"Lima pemeriksaan",
+ check:["Satu video, satu pesan: tas ringan dengan tiga kantong","Teks besar, singkat, kontras dengan latar","Suara jelas dan tidak terburu-buru","Takarir ditambahkan dan dicek","Tiap adegan cukup lama untuk dibaca"]},
+{tag:"Langkah 6 · bagikan",c:"var(--green)",h:"Nama dan izin",
+ rows:[["Nama video","review-tas-jalan-namamu"],["Berbagi","Lihat atau komentar untuk rekan dan fasilitator"],["YouTube","Biarkan privat sampai yakin"],["Unduh","Cara mengunduh belum terkonfirmasi, tanya fasilitator"]]},
+{tag:"Bonus · Craftion",c:"var(--warn)",h:"Storyboard tas jadi video motion",
+ ul:["Hanya untuk kelompok yang selesai lebih cepat","Tempel prompt ini ke Claude, lalu impor JSON-nya ke Craftion","Gagal impor: salin pesan kesalahan ke Claude"],
+ code:"Kamu motion designer untuk Craftion. Tugas: buat deck 5 slide berformat JSON, format 9:16. Konteks: review ringkas Tas Selempang Jalan (produk fiktif: poliester, 250 gram, 3 kantong) untuk mahasiswa. Storyboard: 1) 3 kantong, 250 gram. Cukup buat hari sibukmu? 2) Ke kuliah bawa banyak barang, tapi tas jangan berat. 3) Tas selempang poliester dengan 3 kantong. 4) Muat ponsel, charger, alat tulis. 5) Cek detail di tautan bio. #ad. Batasan: Bahasa Indonesia, maksimal 15 kata per slide, jangan mengarang fakta, elemen muncul dalam 3 detik pertama."},
+{tag:"Etika",c:"var(--warn)",h:"Untuk kasus tas",
+ check:["#ad di video dan di awal caption","Keterangan dibuat dengan bantuan AI karena memuat gambar dan klip AI","Hanya fakta label: poliester, 250 gram, 3 kantong","Tanpa wajah atau suara orang nyata tanpa izin","Tonton sampai habis sebelum dibagikan"]}
+];
+function rowsT(r){return '<div class="tw"><table><tbody>'+r.map(function(x){return '<tr><th style="width:34%">'+esc(x[0])+'</th><td>'+esc(x[1])+'</td></tr>'}).join('')+'</tbody></table></div>'}
+function tableT(t){return '<div class="tw"><table><thead><tr>'+t[0].map(function(x){return '<th>'+esc(x)+'</th>'}).join('')+'</tr></thead><tbody>'+t.slice(1).map(function(r){return '<tr>'+r.map(function(x){return '<td>'+esc(x)+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>'}
+document.getElementById("tas").innerHTML=TAS.map(function(c,i){
+  var h='<div class="card" '+((c.table&&c.table[0].length>3)?'style="grid-column:1/-1"':'')+'><p class="tag" style="color:'+c.c+'">'+esc(c.tag)+'</p><h3>'+esc(c.h)+'</h3>';
+  if(c.rows)h+=rowsT(c.rows);
+  if(c.table)h+=tableT(c.table);
+  if(c.ul)h+='<ul>'+c.ul.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>';
+  if(c.check)h+='<ul class="checks">'+c.check.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>';
+  if(c.code)h+='<pre id="tc'+i+'"></pre><button class="copy" data-for="tc'+i+'">Salin</button>';
+  return h+'</div>'}).join("");
+TAS.forEach(function(c,i){if(c.code)document.getElementById("tc"+i).textContent=c.code});
+
+document.addEventListener("click",function(e){
+  var b=e.target.closest(".copy");if(!b)return;
+  var pre=document.getElementById(b.getAttribute("data-for")),txt=pre.textContent;
+  var done=function(){b.textContent="Tersalin";b.classList.add("ok");setTimeout(function(){b.textContent="Salin";b.classList.remove("ok")},1600)};
+  var fb=function(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Teks terpilih, salin manual";setTimeout(function(){b.textContent="Salin"},2400)};
+  try{navigator.clipboard.writeText(txt).then(done,fb)}catch(x){fb()}
+});
+
+
+document.addEventListener("click",function(e){var b=e.target.closest(".subnav button");if(!b)return;
+  document.querySelectorAll(".subnav button").forEach(function(x){x.classList.toggle("on",x===b)});
+  document.querySelectorAll("#t-bantu .pane").forEach(function(p){p.classList.toggle("on",p.id===b.getAttribute("data-pane"))});
+  b.scrollIntoView({block:"nearest",inline:"center"});
+});
+var TABS={jadwal:"t-jadwal",batas:"t-batas",cheatsheet:"t-cheatsheet","contoh-tas":"t-contoh-tas",bantu:"t-bantu"};
+function route(){
+  var k=(location.hash||"").replace("#","");if(!TABS[k])k="jadwal";
+  Object.keys(TABS).forEach(function(n){document.getElementById(TABS[n]).classList.toggle("on",n===k)});
+  document.querySelectorAll("nav a").forEach(function(a){a.setAttribute("aria-current",a.getAttribute("href")==="#"+k?"true":"false")});
+}
+addEventListener("hashchange",route);route();
+</script>
+
+</body></html>
